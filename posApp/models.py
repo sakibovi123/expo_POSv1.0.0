@@ -58,6 +58,7 @@ class Category(models.Model):
 class Product(models.Model):
     slug = models.SlugField(unique=True)
     title = models.CharField(max_length=120)
+    product_img = models.ImageField(upload_to="images/", null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, null=True)
     buying_price = models.FloatField()

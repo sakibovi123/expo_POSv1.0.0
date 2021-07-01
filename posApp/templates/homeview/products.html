@@ -5,7 +5,7 @@
     <div class="container">
         <div class="col-md-5 offset-md-4">
         
-            <table class="table table-danger table-striped">
+            <table class="table table-danger table-striped m-5">
                 <thead>
                     <th>ID</th>
                     <th>PRODUCT THUMBNAIL</th>
@@ -14,24 +14,31 @@
                     <th>STOCK STATUS</th>
                     <th>ACTIONS</th>
                 </thead>
-                
-                    {% comment %} {% if products %} {% endcomment %}
-                    {% for products in prd %}
-                    <tr class="table-success">
-                        <td>{{ prd.id }}asdasd</td>
-                        <td>{{ prd.img.url }}</td>
-                        <td>{{ prd.title }}</td>
-                        <td>{{ prd.stock_qty }}</td>
-                        <td>{{ prd.stock_stat }}</td>
-                        <td><a href="#" class="btn btn-primary">View</a></td>
-                    </tr>
+                {% if products %}
+                    {% for prd in products %}
+                    
+                        <tr class="table-success">
+                            <td>{{ prd.id }}</td>
+                            <td><img src="{{ prd.product_img.url }}" style="height: 60px; width: 120px"></td>
+                            <td>{{ prd.title }}</td>
+                            <td>{{ prd.stock_qty }}</td>
+                            <td>{{ prd.stock_stat }}</td>
+                            <td><a href="#" class="btn btn-primary">View</a></td>
+                        </tr>
+              
                     {% endfor %}
-                    {% comment %} {% else %}
 
-                        <div class="alert alert-primary mt-5" role="alert">
-                                PRODUCTS NOT FOUND PLEASE ADD SOME
-                        </div>
-                    {% endif %} {% endcomment %}
+                    {% else %}
+
+                    <div class="alert alert-primary" role="alert">
+                        A simple primary alert—check it out!
+                    </div>
+
+                    {% endif %}
+                  
+
+                    
+
                     
 
                     

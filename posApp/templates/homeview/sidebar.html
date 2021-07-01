@@ -57,15 +57,27 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{% url 'get_sell_page' %}">
               <span data-feather="file"></span>
-              SELL PRODUCT
+              POS
             </a>
           </li> 
           <li class="nav-item">
             <a class="nav-link" href="{% url 'get_products_page' %}">
               <span data-feather="shopping-cart"></span>
               Products
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'get_category_page' %}">
+              <span data-feather="shopping-cart"></span>
+              Categories
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'get_brand' %}">
+              <span data-feather="shopping-cart"></span>
+              Brands
             </a>
           </li>
           <li class="nav-item">

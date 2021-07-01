@@ -1,0 +1,329 @@
+{% load static %}
+
+{% include 'homeview/sidebar.html' %}
+
+<link href="{% static 'css/pos.css' %}" rel="stylesheet">
+
+<div class="d-flex justify-content-center m-3 main-container">
+    <div class="container1 p-3">
+        <div class="cart-body">
+        </br>
+            <table class="table table-striped tbl" id="summaryApp">
+                <thead>
+                    <tr>
+                        <th>PRODUCT NAME</th>
+                        <th>QUANTITY</th>
+                        <th>PRICE</th>
+                        <th>GRAND TOTAL</th>
+                    </tr>
+                    
+                </thead>
+                <tbody>
+                    <tr v-for="product in products">
+                        <td>[[ product.title ]]</td>
+                        <td>[[ product.quantity ]]</td>
+                        <td>[[ product.buying_price ]]</td>
+                        <td>[[ product.total_price ]]</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Total</td>
+                        <td></td>
+                        <td></td>
+                        <td>$2300</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="container1 p-3">
+        <div class="category-container">
+
+        </div>
+    </div>
+    <div class="container1 p-3">
+        <div class="product-container">
+            <div class="search-bar">
+            </br>
+                <input type="text" placeholder="Enter to search...." class="form-control top-0 start-50">
+            </div>
+            </br>
+            <div class="product-box" id="productApp">
+                <div class="row m-3">
+                {% comment %} Loop Starts Here {% endcomment %}
+                 
+                {% for product in prod_obj %}
+                 
+                    <div class="product-card">
+                    <button @click="addToCart({{product.id}})">
+                        <img src="{{ product.product_img.url }}">
+                    </button>
+                    </div>
+                    
+                {% endfor %}
+                
+                {% comment %} Ends Here {% endcomment %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
+<script>
+    var productApp = new Vue({
+    el: '#productApp',
+    delimiters: ['[[', ']]'],
+
+    data() {
+        return {
+
+        }
+    },
+
+    mounted() {
+        console.log("Mounted")
+    },
+    methods: {
+        added: function(event){
+            alert("Product Added To Cart");
+        },
+
+        addToCart(product_id) {
+            console.log("product_id:", product_id);
+
+            var data = { 'product_id': product_id, 'update': false, 'quantity': 1 };
+
+            fetch('/api/api_add_to_cart/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(data)
+                })
+                .then((response) => {
+                    console.log(response);
+                })
+
+            .catch(function(error) {
+                console.log("Error 2");
+                console.log(error)
+            })
+        },
+    },
+});
+
+</script>
+
+{% comment %}  {% endcomment %}
+
+	<script>
+		var summaryApp = new Vue({
+            el: "#summaryApp",
+            delimiters: ["[[", "]]"],
+
+
+            data() {
+
+                return {
+                    products: [{{productString|safe}}]
+                }
+
+            },
+
+            mounted() {
+                console.log("Mounted & Loaded");
+            },
+
+
+            methods: {
+                plusButton(product_id, quantity) {
+                    console.log('product_id: ', product_id);
+
+                    var data = {
+                        'product_id': product_id,
+                        'update': true,
+                        'quantity': parseInt(quantity) + 1,
+                    };
+
+                    fetch('/api/api_add_to_cart/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(data)
+                })
+
+                .then((response) => {
+                    console.log(response);
+
+                    for(var i = 0; i < this.products.length; i++){
+                        var product = this.products[i]
+
+                        if(product.id === product_id){
+                            if(product.sale_price){
+                                this.products[i].quantity = parseInt(this.products[i].quantity) + 1
+                                this.products[i].total_price = parseInt(this.products[i].quantity) * parseInt(this.products[i].sale_price)
+                            }
+                            else{
+                                this.products[i].quantity = parseInt(this.products[i].quantity) + 1
+                                this.products[i].total_price = parseInt(this.products[i].quantity) * parseInt(this.products[i].market_price)
+                            }
+
+                        }
+                    }
+                })
+
+                .catch(function (error) {
+                    console.log("Error 2");
+                    console.log(error)
+                })
+
+                },
+
+                // Minus Button Functions//
+
+            minusButton(product_id, quantity){
+                console.log('product_id:', product_id);
+                var data = {
+                    'product_id': product_id,
+                    'update': true,
+                    'quantity': parseInt(quantity) - 1,
+                };
+
+                fetch('/api/api_add_to_cart/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(data)
+                })
+                .then((response) => {
+                    console.log(response);
+
+                    for(var i = 0; i < this.products.length; i++){
+                        var product = this.products[i]
+
+                        if(product.id === product_id){
+                            if(product.market_price){
+                                this.products[i].quantity = parseInt(this.products[i].quantity) - 1
+                                this.products[i].total_price = parseInt(this.products[i].quantity) * parseInt(this.products[i].market_price)
+                            }
+                            else{
+                                this.products[i].quantity = parseInt(this.products[i].quantity) - 1
+                                this.products[i].total_price = parseInt(this.products[i].quantity) * parseInt(this.products[i].sale_price)
+                            }
+
+
+                        }
+                    }
+                })
+
+                .catch(function (error) {
+                    console.log("Error 2");
+                    console.log(error)
+                })
+            },
+
+
+
+            //  Remove Button //
+
+
+            removeProduct(product_id) {
+
+                console.log(product_id)
+                 var data = {'product_id': product_id};
+
+                 fetch('/api/api_remove_from_cart/', {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'X-CSRFToken': '{{ csrf_token }}',
+                     },
+                     credentials: 'same-origin',
+                     body: JSON.stringify(data)
+                 })
+                 .then((response) => {
+                     console.log(response)
+                     this.products = this.products.filter(product => product.id !== product_id)
+                 })
+                 .catch(function (error) {
+                     console.log(error)
+                 })
+
+            }
+
+            },
+
+        });
+	</script>
+
+        {% comment %} <script>
+        var checkoutApp = new Vue({
+            el: "#checkoutApp",
+            delimiters: ["[[", "]]"],
+
+            data() {
+                return {
+                    first_name: '',
+                    last_name: '',
+                    email: '',
+                    address: '',
+                    zipcode: '',
+                    city: '',
+                    products: [{{productString|safe}}]
+                }
+            },
+            mounted(){
+                console.log("Checkout Form Ok !");
+            },
+
+            methods: {
+                submitForm(){
+                    console.log("Checkout Form ok!");
+
+                    var data = {
+                        first_name: this.first_name,
+                        last_name: this.last_name,
+                        email: this.email,
+                        address: this.address,
+                        zipcode: this.zipcode,
+                        city: this.city
+                    };
+
+                    console.log("datas:", data);
+
+                    fetch('/api/api_checkout/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+
+                        credentials: 'same-origin',
+                        body: JSON.stringify(data)
+                    })
+
+                        .then((response) =>  {
+                        console.log("Success");
+                        console.log(response);
+
+                        window.location.href = '/';
+
+                        })
+                        .catch(function (error) {
+                        console.log("Error Number 2");
+                        })
+                },
+            },
+        });
+    </script> {% endcomment %}

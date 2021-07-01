@@ -1,0 +1,34 @@
+{% load static %}
+
+{% include 'homeview/sidebar.html' %}
+
+
+<div class="container">
+        <div class="col-md-5 offset-md-4">
+        
+            <table class="table table-danger table-striped m-5">
+                <thead>
+                    <th>ID</th>
+                    <th>CATEGORY THUMBNAIL</th>
+                    <th>CATEGORY NAME</th>
+                    <th>TOTAL PRODUCTS</th>
+                    <th>ACTIONS</th>
+                </thead>
+                    {% for cat in cats %}
+                        <tr class="table-success">
+                            <td>{{ cat.id }}</td>
+                            <td><img src="{{ cat.cat_img.url }}" style="height: 60px; width: 120px"></td>
+                            <td>{{ cat.title }}</td>
+                            <td>{{ cat|length }}</td>
+                            <td><a href="#" class="btn btn-primary">View</a></td>
+                        </tr>
+                    {% endfor %}
+
+                    
+
+                    
+               
+            </table>
+            
+        </div>
+    </div>

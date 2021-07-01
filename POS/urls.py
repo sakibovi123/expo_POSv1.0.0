@@ -19,6 +19,7 @@ from posApp import views
 from posApp.views import *
 from django.conf import settings
 from django.conf.urls.static import static
+from posApp.api import api_add_to_cart, api_remove_from_cart
 
 
 
@@ -37,6 +38,24 @@ urlpatterns = [
     # Products page URL
 
     path('all_products/', views.get_products_page, name="get_products_page"),
+    
+    # Category URLS
+
+    path('categories/', views.get_category_page, name="get_category_page"),
+
+    ## Brands URLS
+
+    path('brands/', views.get_brand, name="get_brand"),
+
+    ## Sell page
+
+    path('get_sell_page/', views.get_sell_page, name="get_sell_page"),
+
+
+    ### API REQUESTS ###
+
+    path('api/api_add_to_cart/', api_add_to_cart, name="api_add_to_cart"),
+    path('api/api_remove_from_cart/', api_remove_from_cart, name="api_remove_from_cart"),
 ]
 
 if settings.DEBUG:
