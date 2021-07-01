@@ -25,11 +25,11 @@ class Cart:
         
 
         for item in self.cart.values():
-            print(item)
+            
 
             item['total_price'] = float(item['buying_price']) * int(item['quantity'])
 
-            print(item['total_price'])
+           
             yield item
 
     
@@ -70,3 +70,8 @@ class Cart:
 
     def get_total_cost(self):
         return sum(float(item['total_price']) for item in self)
+
+    def get_cart_items(self):
+        print(self.cart)
+        return self.cart
+        # print(self.cart)
