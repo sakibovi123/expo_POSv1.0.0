@@ -80,16 +80,20 @@ class PaymentMethod(models.Model):
 
 class SellProducts(models.Model):
     customer_name = models.CharField(max_length=120)
-    phone = models.CharField(max_length=120)
-    method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE, null=True)
-    products = models.ManyToManyField(Product, null=True)
-    quantity = models.IntegerField()
-    selling_price = models.FloatField()
-    discount = models.FloatField()
-    total = models.FloatField()
+    customer_phone = models.CharField(max_length=120)
+    paid = models.BooleanField(default=False, null=True, blank=True)
+    paid_amount = models.FloatField(null=True, blank=True)
 
 
     def __str__(self):
         return self.customer_name
 
+
+class SellItems(models.Model):
+    order = models.ForeignKey(SellProducts, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name="items")
+    buying_price = models.FloatField()
+    quantity = models.IntegerField(default=1)
     
+    def __str__(self):
+        return str(self.id)

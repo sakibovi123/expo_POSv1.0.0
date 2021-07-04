@@ -98,3 +98,9 @@ def get_sell_page(request):
 
     args = {'prod_obj': prod_obj, 'cart': cart, 'productString': productString}
     return render(request, 'homeview/sell.html', args)
+
+
+
+
+
+        

@@ -2,8 +2,9 @@ import json
 from django.http import JsonResponse
 from .cart import Cart
 from django.shortcuts import get_object_or_404
-
+from .views import *
 from .models import *
+from .utils import checkout
 
 
 def api_add_to_cart(request):
@@ -38,29 +39,24 @@ def api_remove_from_cart(request):
     return JsonResponse(jsonresponse)
 
 
+def api_checkout(request):
+    data = json.loads(request.body)
+    cart = Cart(request)
+    jsonresponse = {'success': True}
 
-# def api_checkout(request):
-#     data = json.loads(request.body)
-#     cart = Cart(request)
-#     jsonresponse = {'success': True}
+    customer_name = data['customer_name']
+    customer_phone = data['customer_phone']
+    orderId = checkout(request, customer_name, customer_phone)
 
-#     first_name = data['first_name']
-#     last_name = data['last_name']
-#     email = data['email']
-#     address = data['address']
-#     zipcode = data['zipcode']
-#     city = data['city']
+    paid = True
 
-#     orderId = checkout(request, first_name, last_name, email, address, zipcode, city)
+    if paid == True:
+        order = SellProducts.objects.get(pk=orderId)
+        order.paid = True
+        order.paid_amount = cart.get_total_cost()
 
-#     paid = True
+        order.save()
+        cart.clear()
+        print("Checkout Saved")
+    return JsonResponse(jsonresponse)
 
-#     if paid == True:
-#         order = Order.objects.get(pk=orderId)
-#         order.paid = True
-#         order.paid_amount = cart.get_total_cost()
-
-#         order.save()
-#         cart.clear()
-
-#     return JsonResponse(jsonresponse)

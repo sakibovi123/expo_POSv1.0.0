@@ -19,7 +19,7 @@ from posApp import views
 from posApp.views import *
 from django.conf import settings
 from django.conf.urls.static import static
-from posApp.api import api_add_to_cart, api_remove_from_cart
+from posApp.api import api_add_to_cart, api_remove_from_cart, api_checkout
 
 
 
@@ -56,6 +56,8 @@ urlpatterns = [
 
     path('api/api_add_to_cart/', api_add_to_cart, name="api_add_to_cart"),
     path('api/api_remove_from_cart/', api_remove_from_cart, name="api_remove_from_cart"),
+    path('api/api_checkout/', api_checkout, name="api_checkout"),
+
 ]
 
 if settings.DEBUG:
